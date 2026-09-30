@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2x2 Rubik's Cube – Ecken tauschen</title>
+  <title>2x2 Rubik's Cube – Lösungshilfe</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>2x2 Rubik's Cube</h1>
+  <h1>2x2 Rubik's Cube – Lösungshilfe</h1>
 
   <div class="mode-bar">
     <label for="modeSelect">Zugfolge:</label>
     <select id="modeSelect" onchange="setMode(this.value)">
-      <option value="adjacent" selected>Erste Ebene: Nebeneinander tauschen</option>
-      <option value="diagonal">Erste Ebene: Diagonal tauschen</option>
+      <option value="insert" selected>Erste Ebene: Ecke einsetzen (4 Züge)</option>
+      <option value="adjacent">Erste Ebene: Nebeneinander tauschen (7 Züge)</option>
+      <option value="diagonal">Erste Ebene: Diagonal tauschen (3 Züge)</option>
       <option value="top_cycle">Erste Ebene: 3 Ecken falsch positioniert (8 Züge)</option>
       <option value="twist">Erste Ebene: 2 Ecken verdreht (10 Züge)</option>
       <option value="twist3">Erste Ebene: 3 Ecken verdreht – Sune (7 Züge)</option>
@@ -65,7 +66,12 @@
       &nbsp;&nbsp;– je nachdem, ob 3 Ecken oder beide Paare falsch stehen<br>
       • <strong>Verdreht:</strong> Ecke sitzt richtig, ist aber gedreht (Deckfarbe zeigt seitlich)<br>
       &nbsp;&nbsp;– es gibt Varianten für 2 oder 3 verdrehte Ecken<br><br>
-      <strong>Erste Ebene:</strong> intuitiv lösen – die passende Ecke einsetzen und ggf. ausrichten.<br><br>
+      <strong>Lösungsweg Schritt für Schritt:</strong><br>
+      1. <strong>Erste Ebene:</strong> 4 gleichfarbige Ecken einsetzen (Zugfolge "Ecke einsetzen")<br>
+      2. <strong>Würfel umdrehen</strong> – die ungelöste Ebene liegt jetzt oben<br>
+      3. <strong>Orientieren:</strong> Verdrehte Ecken zählen und die passende Zugfolge wählen<br>
+      &nbsp;&nbsp;(bei Sune: Würfel so halten, dass die korrekt ausgerichtete Ecke hinten links liegt)<br>
+      4. <strong>Permutieren:</strong> Falsche Positionen prüfen – nebeneinander, diagonal oder im Kreis?<br><br>
       <strong>Notation:</strong> Ein Zug ist "im Uhrzeigersinn" aus der Sicht, wenn du die jeweilige<br>
       Fläche <strong>von außen direkt anschaust</strong>. Achtung: <code>U</code> (unten) und <code>H</code> (hinten)<br>
       wirken von vorne betrachtet gegenläufig! <code>X'</code> = gegen Uhrzeigersinn, <code>X2</code> = 180°.<br>

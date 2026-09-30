@@ -10,6 +10,9 @@ function dispMove(m) { return DISPLAY[m[0]] + m.slice(1); }
 function dispAlgo(seq) { return seq.split(' ').map(dispMove).join(' '); }
 
 const MODES = {
+  insert: { name: 'Erste Ebene: Ecke einsetzen (4 Züge)',
+              algo: "R' D' R D",
+              A: [1, 1, 1], B: [1, 0, 1] },   // URF slot + DFR slot
   adjacent: { name: 'Erste Ebene: Nebeneinander', algo: "R2 D L2 D2 B2 D R2",
               A: [1, 1, 1], B: [0, 1, 1] },   // UFR, UFL
   diagonal: { name: 'Erste Ebene: Diagonal', algo: "R2 F2 R2",

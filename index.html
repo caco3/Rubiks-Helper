@@ -11,15 +11,15 @@
   <p class="subtitle">Ecken tauschen: A &#8596; B</p>
 
   <div class="mode-bar">
-    <label for="modeSelect">Variante:</label>
+    <label for="modeSelect">Zugfolge:</label>
     <select id="modeSelect" onchange="setMode(this.value)">
-      <option value="adjacent" selected>Nebeneinander tauschen</option>
-      <option value="diagonal">Diagonal tauschen</option>
-      <option value="top_cycle">3 Ecken falsch positioniert (8 Zuege)</option>
-      <option value="twist">2 Ecken verdreht (10 Zuege)</option>
-      <option value="twist3">3 Ecken verdreht – Sune (7 Zuege)</option>
-      <option value="adjacent_bottom_cycle">Unten: 3 Ecken falsch positioniert (8 Zuege)</option>
-      <option value="adjacent_bottom">Unten: 4 Ecken falsch – nebeneinander (11 Zuege)</option>
+      <option value="adjacent" selected>Erste Ebene: Nebeneinander tauschen</option>
+      <option value="diagonal">Erste Ebene: Diagonal tauschen</option>
+      <option value="top_cycle">Erste Ebene: 3 Ecken falsch positioniert (8 Zuege)</option>
+      <option value="twist">Erste Ebene: 2 Ecken verdreht (10 Zuege)</option>
+      <option value="twist3">Erste Ebene: 3 Ecken verdreht – Sune (7 Zuege)</option>
+      <option value="adjacent_bottom_cycle">Zweite Ebene: 3 Ecken falsch positioniert (8 Zuege)</option>
+      <option value="adjacent_bottom">Zweite Ebene: 4 Ecken falsch – nebeneinander (11 Zuege)</option>
     </select>
   </div>
 

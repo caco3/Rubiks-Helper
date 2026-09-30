@@ -15,11 +15,11 @@
     <select id="modeSelect" onchange="setMode(this.value)">
       <option value="adjacent" selected>Erste Ebene: Nebeneinander tauschen</option>
       <option value="diagonal">Erste Ebene: Diagonal tauschen</option>
-      <option value="top_cycle">Erste Ebene: 3 Ecken falsch positioniert (8 Zuege)</option>
-      <option value="twist">Erste Ebene: 2 Ecken verdreht (10 Zuege)</option>
-      <option value="twist3">Erste Ebene: 3 Ecken verdreht – Sune (7 Zuege)</option>
-      <option value="adjacent_bottom_cycle">Zweite Ebene: 3 Ecken falsch positioniert (8 Zuege)</option>
-      <option value="adjacent_bottom">Zweite Ebene: 4 Ecken falsch – nebeneinander (11 Zuege)</option>
+      <option value="top_cycle">Erste Ebene: 3 Ecken falsch positioniert (8 Züge)</option>
+      <option value="twist">Erste Ebene: 2 Ecken verdreht (10 Züge)</option>
+      <option value="twist3">Erste Ebene: 3 Ecken verdreht – Sune (7 Züge)</option>
+      <option value="adjacent_bottom_cycle">Zweite Ebene: 3 Ecken falsch positioniert (8 Züge)</option>
+      <option value="adjacent_bottom">Zweite Ebene: 4 Ecken falsch – nebeneinander (11 Züge)</option>
     </select>
   </div>
 
@@ -32,47 +32,50 @@
     <div class="algo" id="algoDisplay"></div>
   </div>
 
-  <p class="status-text" id="statusText">Verdreht! A und B sind auf falschen Positionen – loese den Cube.</p>
+  <p class="status-text" id="statusText"></p>
 
   <div class="controls">
     <button class="btn-play" id="btnPlay" onclick="playAll()">&#9654; Abspielen</button>
     <button class="btn-step" id="btnStep" onclick="stepNext()">&#9193; Schritt</button>
     <button class="btn-reset" onclick="resetCube()">&#8635; Reset</button>
-    <button class="btn-speed" id="btnSpeed" onclick="toggleSpeed()">Tempo: Normal</button>
+    <label class="speed-slider">Tempo
+      <input type="range" id="speedSlider" min="100" max="1200" step="50" value="700"
+             oninput="speedMs = 1300 - +this.value">
+    </label>
   </div>
 
   <div class="legend">
-    <div class="legend-item"><div class="legend-color" style="background:#ffffff"></div>Weiss = O (oben)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ffffff"></div>Weiß = O (oben)</div>
     <div class="legend-item"><div class="legend-color" style="background:#ffff00"></div>Gelb = U (unten)</div>
-    <div class="legend-item"><div class="legend-color" style="background:#00cc00"></div>Gruen = V (vorne)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#00cc00"></div>Grün = V (vorne)</div>
     <div class="legend-item"><div class="legend-color" style="background:#0066ff"></div>Blau = H (hinten)</div>
     <div class="legend-item"><div class="legend-color" style="background:#cc0000"></div>Rot = R (rechts)</div>
     <div class="legend-item"><div class="legend-color" style="background:#ff9100"></div>Orange = L (links)</div>
   </div>
-  <p class="subtitle" style="margin-top:2px">Die Buchstaben sind die Zug-Namen der Flaechen – auch als Marker am Cube sichtbar.</p>
+  <p class="subtitle" style="margin-top:2px">Die Buchstaben sind die Zug-Namen der Flächen – auch als Marker am Cube sichtbar.</p>
 
   <div class="info-panel">
     <h3>Anleitung</h3>
     <p>
       <strong>Algorithmus:</strong> <span id="algoText"></span><br>
       Die markierten Ecken <strong>A</strong> und <strong>B</strong> (Buchstaben auf allen 3 Seiten)<br>
-      starten auf <strong>falschen Positionen</strong> – nach den Zuegen sind sie korrekt.<br><br>
-      <strong>Welcher Algorithmus?</strong><br>
-      • <strong>Falsche Position:</strong> Ecken sitzen auf falschen Plaetzen (Seitenfarben passen nicht)<br>
-      &nbsp;&nbsp;– 3 Ecken falsch: 8-Zug-3er-Zyklus &nbsp;|&nbsp; beide Paare falsch: 11-Zug-Doppel-Tausch<br>
-      • <strong>Verdreht:</strong> Ecke sitzt richtig, ist aber gedreht (Weiss zeigt seitlich)<br>
-      &nbsp;&nbsp;– 10-Zug-Algorithmus (2 Ecken) &nbsp;|&nbsp; Sune (3 Ecken)<br><br>
-      <strong>Erste Ebene:</strong> intuitiv loesen – Ecke mit <code>R' D' R D</code> einsetzen.<br><br>
+      starten auf <strong>falschen Positionen</strong> – nach den Zügen sind sie korrekt.<br><br>
+      <strong>Welche Zugfolge?</strong><br>
+      • <strong>Falsche Position:</strong> Ecken sitzen auf falschen Plätzen (Seitenfarben passen nicht)<br>
+      &nbsp;&nbsp;– je nachdem, ob 3 Ecken oder beide Paare falsch stehen<br>
+      • <strong>Verdreht:</strong> Ecke sitzt richtig, ist aber gedreht (Deckfarbe zeigt seitlich)<br>
+      &nbsp;&nbsp;– es gibt Varianten für 2 oder 3 verdrehte Ecken<br><br>
+      <strong>Erste Ebene:</strong> intuitiv lösen – die passende Ecke einsetzen und ggf. ausrichten.<br><br>
       <strong>Notation:</strong> Ein Zug ist "im Uhrzeigersinn" aus der Sicht, wenn du die jeweilige<br>
-      Flaeche <strong>von aussen direkt anschaust</strong>. Achtung: <code>U</code> (unten) und <code>H</code> (hinten)<br>
-      wirken von vorne betrachtet gegenlaeufig! <code>X'</code> = gegen Uhrzeigersinn, <code>X2</code> = 180°.<br>
+      Fläche <strong>von außen direkt anschaust</strong>. Achtung: <code>U</code> (unten) und <code>H</code> (hinten)<br>
+      wirken von vorne betrachtet gegenläufig! <code>X'</code> = gegen Uhrzeigersinn, <code>X2</code> = 180°.<br>
       Buchstaben: <code>O</code>ben <code>U</code>nten <code>V</code>orne <code>H</code>inten <code>R</code>echts <code>L</code>inks.<br><br>
       <strong>Steuerung:</strong><br>
-      • <strong>Abspielen:</strong> Alle Zuege automatisch nacheinander<br>
-      • <strong>Schritt:</strong> Einen Zug nach dem anderen ausfuehren<br>
-      • <strong>Pfeiltasten &larr;/&rarr;:</strong> Schritt zurueck / vorwaerts<br>
-      • <strong>Reset:</strong> Wuerfel zuruecksetzen<br>
-      • <strong>Maus ziehen:</strong> Wuerfel drehen (Ansicht aendern)
+      • <strong>Abspielen:</strong> Alle Züge automatisch nacheinander<br>
+      • <strong>Schritt:</strong> Einen Zug nach dem anderen ausführen<br>
+      • <strong>Pfeiltasten &larr;/&rarr;:</strong> Schritt zurück / vorwärts<br>
+      • <strong>Reset:</strong> Würfel zurücksetzen<br>
+      • <strong>Maus ziehen:</strong> Würfel drehen (Ansicht ändern)
     </p>
   </div>
 

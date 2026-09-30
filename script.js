@@ -1,7 +1,7 @@
 // ==================== GLOBALS ====================
 const FACE_NAMES = {
   R: 'Rechte Seite', L: 'Linke Seite', U: 'Obere Seite',
-  D: 'Untere Seite', F: 'Vorderseite', B: 'Rueckseite'
+  D: 'Untere Seite', F: 'Vorderseite', B: 'Rückseite'
 };
 // Swap modes: algo (optimal solver), grid coords of the A and B cubies
 // Display mapping: internal Singmaster -> German letters
@@ -14,19 +14,19 @@ const MODES = {
               A: [1, 1, 1], B: [0, 1, 1] },   // UFR, UFL
   diagonal: { name: 'Erste Ebene: Diagonal', algo: "R2 F2 R2",
               A: [0, 1, 1], B: [1, 1, 0] },   // UFL, UBR
-  top_cycle: { name: 'Erste Ebene: 3 Ecken falsch positioniert (8 Zuege)',
+  top_cycle: { name: 'Erste Ebene: 3 Ecken falsch positioniert (8 Züge)',
               algo: "R U' L' U R' U' L U",
               A: [1, 1, 1], B: [1, 1, 0] },   // URF, UBR
-  twist: { name: 'Erste Ebene: 2 Ecken verdreht (10 Zuege)',
+  twist: { name: 'Erste Ebene: 2 Ecken verdreht (10 Züge)',
               algo: "B U B2 L2 U' B' U L' U L'",
               A: [1, 1, 1], B: [0, 1, 1] },   // URF, UFL - twisted in place
-  twist3: { name: 'Erste Ebene: 3 Ecken verdreht – Sune (7 Zuege)',
+  twist3: { name: 'Erste Ebene: 3 Ecken verdreht – Sune (7 Züge)',
               algo: "R U R' U R U2 R'",
               A: [1, 1, 1], B: [0, 1, 1] },   // URF, UFL (+ ULB unmarked)
-  adjacent_bottom_cycle: { name: 'Zweite Ebene: 3 Ecken falsch positioniert (8 Zuege)',
+  adjacent_bottom_cycle: { name: 'Zweite Ebene: 3 Ecken falsch positioniert (8 Züge)',
               algo: "R D' L' D R' D' L D",
               A: [1, 0, 1], B: [0, 0, 1] },   // DFR, DLF
-  adjacent_bottom: { name: 'Zweite Ebene: 4 Ecken falsch – nebeneinander (11 Zuege)',
+  adjacent_bottom: { name: 'Zweite Ebene: 4 Ecken falsch – nebeneinander (11 Züge)',
               algo: "B2 D' R D' R' D2 B D' R' B2 R",
               A: [1, 0, 1], B: [0, 0, 1] },   // DFR, DLF
 };
@@ -50,8 +50,7 @@ let scene, camera, renderer, cubeGroup, raycaster;
 let cubies = []; // 8 cubies
 let animating = false;
 let currentStep = -1;
-let speedMs = 600; // animation duration
-let speedLabel = 'Normal';
+let speedMs = 600; // animation duration (set by Tempo slider)
 let isDragging = false;
 let prevMouse = { x: 0, y: 0 };
 let rotX = -25, rotY = 35; // initial view angles
@@ -97,7 +96,7 @@ function init() {
   scene.add(cubeGroup);
 
   document.getElementById('algoName').textContent =
-    `${MODES[mode].name} (${MOVES.length} Zuege)`;
+    `${MODES[mode].name} (${MOVES.length} Züge)`;
   document.getElementById('algoText').textContent = dispAlgo(MODES[mode].algo);
   buildCube();
   updateAlgoDisplay();
@@ -518,7 +517,7 @@ async function stepPrev() {
             : move + "'";
   currentStep = idx - 1;
   document.getElementById('statusText').textContent =
-    `Rueckgaengig: ${describeMove(inv)}`;
+    `Rückgängig: ${describeMove(inv)}`;
   document.getElementById('btnPlay').disabled = false;
   document.getElementById('btnStep').disabled = false;
   updateAlgoDisplay();
@@ -554,32 +553,14 @@ function resetCube() {
   if (animating) return;
   currentStep = -1;
   document.getElementById('algoName').textContent =
-    `${MODES[mode].name} (${MOVES.length} Zuege)`;
+    `${MODES[mode].name} (${MOVES.length} Züge)`;
   document.getElementById('algoText').textContent = dispAlgo(MODES[mode].algo);
   buildCube();
   updateAlgoDisplay();
   document.getElementById('statusText').textContent =
-    'Verdreht! A und B sind auf falschen Positionen – loese den Cube.';
+    'Verdreht! A und B sind auf falschen Positionen – löse den Cube.';
   document.getElementById('btnPlay').disabled = false;
   document.getElementById('btnStep').disabled = false;
-}
-
-function toggleSpeed() {
-  const btn = document.getElementById('btnSpeed');
-  if (speedLabel === 'Normal') {
-    speedMs = 300;
-    speedLabel = 'Schnell';
-  } else if (speedLabel === 'Schnell') {
-    speedMs = 150;
-    speedLabel = 'Sehr schnell';
-  } else if (speedLabel === 'Sehr schnell') {
-    speedMs = 1000;
-    speedLabel = 'Langsam';
-  } else {
-    speedMs = 600;
-    speedLabel = 'Normal';
-  }
-  btn.textContent = `Tempo: ${speedLabel}`;
 }
 
 // ==================== KEYBOARD ====================

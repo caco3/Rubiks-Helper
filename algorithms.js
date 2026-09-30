@@ -156,4 +156,4 @@ window.addEventListener('keydown', e => {
 });
 
 // ==================== START ====================
-init();
+if (document.getElementById('cubeCanvas')) init();

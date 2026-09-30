@@ -39,6 +39,10 @@ python3 -m http.server 8080
 # → http://localhost:8080
 ```
 
+## Cheat Sheet (PDF)
+
+**https://caco3.github.io/Rubiks-Helper/cheatsheet.html** – alle Zugfolgen mit Vorher/Nachher-Bildern und Schritt-Erklärungen. In der Seite: Strg+P → „Als PDF speichern".
+
 ## Deployment
 
 GitHub Pages via `.github/workflows/deploy-pages.yml` – deployt automatisch bei Push auf `main`.

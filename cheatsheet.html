@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2x2 Rubik's Cube – Cheat Sheet</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #fff;
+      color: #111;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 { font-size: 1.5rem; }
+    .hint { color: #555; margin-bottom: 20px; }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      page-break-inside: avoid;
+    }
+    .card h2 { margin: 0 0 4px; font-size: 1.1rem; }
+    .seq {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      margin: 4px 0 10px;
+    }
+    .imgs { display: flex; align-items: center; gap: 14px; }
+    .imgs figure { margin: 0; text-align: center; }
+    .imgs figcaption { font-size: 0.8rem; color: #555; margin-top: 2px; }
+    .arrow { font-size: 2rem; color: #ff9800; }
+    ol { margin: 10px 0 0; padding-left: 22px; font-size: 0.9rem; line-height: 1.5; }
+    button.print {
+      padding: 10px 20px; border: none; border-radius: 8px;
+      background: #ff9800; color: #fff; font-weight: 600; cursor: pointer;
+    }
+    @media print {
+      .noprint { display: none; }
+      body { max-width: none; padding: 0; }
+      .card { border: 1px solid #999; }
+    }
+  </style>
+</head>
+<body>
+  <h1>2x2 Rubik's Cube – Cheat Sheet</h1>
+  <p class="hint noprint">
+    Alle Zugfolgen mit Vorher/Nachher-Bild. <strong>Strg+P → „Als PDF speichern“</strong> für den PDF-Export.
+    <button class="print" onclick="window.print()">Drucken / Als PDF speichern</button>
+    &nbsp;|&nbsp; <a href="index.html">← Zurück zum Cube</a>
+  </p>
+  <p>
+    Notation: <strong>O</strong>ben, <strong>U</strong>nten, <strong>V</strong>orne, <strong>H</strong>inten,
+    <strong>R</strong>echts, <strong>L</strong>inks. Ein Zug dreht die Fläche im Uhrzeigersinn,
+    von dieser Fläche aus gesehen. <code>'</code> = gegen den Uhrzeigersinn, <code>2</code> = 180°.<br>
+    In den Bildern: großes Quadrat = Sticker der betrachteten Seite, kleine Quadrate = Seiten-Sticker,
+    <strong>A</strong>/<strong>B</strong> = die markierten Ecken.
+  </p>
+
+  <div id="cards"></div>
+
+  <script src="algorithms.js"></script>
+  <script src="cheatsheet.js"></script>
+</body>
+</html>

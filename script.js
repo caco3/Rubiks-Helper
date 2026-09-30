@@ -97,7 +97,6 @@ function init() {
 
   document.getElementById('algoName').textContent =
     `${MODES[mode].name} (${MOVES.length} Züge)`;
-  document.getElementById('algoText').textContent = dispAlgo(MODES[mode].algo);
   buildCube();
   updateAlgoDisplay();
   render();
@@ -554,7 +553,6 @@ function resetCube() {
   currentStep = -1;
   document.getElementById('algoName').textContent =
     `${MODES[mode].name} (${MOVES.length} Züge)`;
-  document.getElementById('algoText').textContent = dispAlgo(MODES[mode].algo);
   buildCube();
   updateAlgoDisplay();
   document.getElementById('statusText').textContent =

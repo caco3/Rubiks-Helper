@@ -186,8 +186,11 @@
   <div class="mode-bar">
     <label for="modeSelect">Variante:</label>
     <select id="modeSelect" onchange="setMode(this.value)">
-      <option value="adjacent" selected>Nebeneinander tauschen</option>
-      <option value="diagonal">Diagonal tauschen</option>
+      <option value="adjacent" selected>Oben: Nebeneinander tauschen</option>
+      <option value="diagonal">Oben: Diagonal tauschen</option>
+      <option value="twist">Oben: 2 Ecken verdreht (10 Zuege)</option>
+      <option value="adjacent_bottom_cycle">Unten: 3 Ecken falsch positioniert (8 Zuege)</option>
+      <option value="adjacent_bottom">Unten: Paare falsch positioniert (11 Zuege)</option>
     </select>
   </div>
 
@@ -225,6 +228,11 @@
       <strong>Algorithmus:</strong> <span id="algoText"></span><br>
       Die markierten Ecken <strong>A</strong> und <strong>B</strong> (Buchstaben auf allen 3 Seiten)<br>
       starten auf <strong>falschen Positionen</strong> – nach den Zuegen sind sie korrekt.<br><br>
+      <strong>Welcher Algorithmus?</strong><br>
+      • <strong>Falsche Position:</strong> Ecken sitzen auf falschen Plaetzen (Farben der Seiten passen nicht)<br>
+      &nbsp;&nbsp;– 3 Ecken falsch: 8-Zug-3er-Zyklus &nbsp;|&nbsp; beide Paare falsch: 11-Zug-Doppel-Tausch<br>
+      • <strong>Verdreht:</strong> Ecke sitzt auf dem richtigen Platz, ist aber gedreht (Weiss zeigt seitlich)<br>
+      &nbsp;&nbsp;– 10-Zug-Algorithmus dreht 2 Ecken (einzeln geht nicht – Paritaet!)<br><br>
       <strong>Steuerung:</strong><br>
       • <strong>Abspielen:</strong> Alle Zuege automatisch nacheinander<br>
       • <strong>Schritt:</strong> Einen Zug nach dem anderen ausfuehren<br>
@@ -248,10 +256,19 @@
     };
     // Swap modes: algo (optimal solver), grid coords of the A and B cubies
     const MODES = {
-      adjacent: { name: 'Nebeneinander', algo: "R2 D L2 D2 B2 D R2",
+      adjacent: { name: 'Oben: Nebeneinander', algo: "R2 D L2 D2 B2 D R2",
                   A: [1, 1, 1], B: [0, 1, 1] },   // UFR, UFL
-      diagonal: { name: 'Diagonal', algo: "R2 F2 R2",
+      diagonal: { name: 'Oben: Diagonal', algo: "R2 F2 R2",
                   A: [0, 1, 1], B: [1, 1, 0] },   // UFL, UBR
+      adjacent_bottom_cycle: { name: 'Unten: 3 Ecken falsch positioniert (8 Zuege)',
+                  algo: "R D' L' D R' D' L D",
+                  A: [1, 0, 1], B: [0, 0, 1] },   // DFR, DLF
+      adjacent_bottom: { name: 'Unten: Paare falsch positioniert (11 Zuege)',
+                  algo: "B2 D' R D' R' D2 B D' R' B2 R",
+                  A: [1, 0, 1], B: [0, 0, 1] },   // DFR, DLF
+      twist: { name: 'Oben: 2 Ecken verdreht (10 Zuege)',
+                  algo: "B U B2 L2 U' B' U L' U L'",
+                  A: [1, 1, 1], B: [0, 1, 1] },   // URF, UFL - twisted in place
     };
     let mode = 'adjacent';
     let MOVES = MODES[mode].algo.split(' ');

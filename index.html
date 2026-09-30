@@ -11,7 +11,7 @@
 
   <div class="mode-bar">
     <label for="modeSelect">Zugfolge:</label>
-    <select id="modeSelect" onchange="setMode(this.value)">
+    <select id="modeSelect" onchange="setMode(this.value); this.blur()">
       <option value="insert" selected>Erste Ebene: Ecke einsetzen (4 Züge)</option>
       <option value="adjacent">Erste Ebene: Nebeneinander tauschen (7 Züge)</option>
       <option value="diagonal">Erste Ebene: Diagonal tauschen (3 Züge)</option>

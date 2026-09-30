@@ -150,6 +150,7 @@ function resetCube() {
 
 // ==================== KEYBOARD ====================
 window.addEventListener('keydown', e => {
+  if (e.target.matches('select, input, button')) return;
   if (e.key === 'ArrowRight') stepNext();
   else if (e.key === 'ArrowLeft') stepPrev();
 });

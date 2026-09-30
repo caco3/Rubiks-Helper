@@ -13,10 +13,12 @@
   <div class="mode-bar">
     <label for="modeSelect">Variante:</label>
     <select id="modeSelect" onchange="setMode(this.value)">
-      <option value="adjacent" selected>Oben: Nebeneinander tauschen</option>
-      <option value="diagonal">Oben: Diagonal tauschen</option>
-      <option value="twist">Oben: 2 Ecken verdreht (10 Zuege)</option>
-      <option value="adjacent_bottom_cycle">Unten: 3 Ecken falsch (8 Zuege)</option>
+      <option value="adjacent" selected>Nebeneinander tauschen</option>
+      <option value="diagonal">Diagonal tauschen</option>
+      <option value="top_cycle">3 Ecken falsch positioniert (8 Zuege)</option>
+      <option value="twist">2 Ecken verdreht (10 Zuege)</option>
+      <option value="twist3">3 Ecken verdreht – Sune (7 Zuege)</option>
+      <option value="adjacent_bottom_cycle">Unten: 3 Ecken falsch positioniert (8 Zuege)</option>
       <option value="adjacent_bottom">Unten: 4 Ecken falsch – nebeneinander (11 Zuege)</option>
     </select>
   </div>
@@ -41,11 +43,11 @@
 
   <div class="legend">
     <div class="legend-item"><div class="legend-color" style="background:#ffffff"></div>Weiss = O (oben)</div>
-    <div class="legend-item"><div class="legend-color" style="background:#ffd500"></div>Gelb = U (unten)</div>
-    <div class="legend-item"><div class="legend-color" style="background:#ff0000"></div>Rot = V (vorne)</div>
-    <div class="legend-item"><div class="legend-color" style="background:#ff8800"></div>Orange = H (hinten)</div>
-    <div class="legend-item"><div class="legend-color" style="background:#00cc00"></div>Gruen = R (rechts)</div>
-    <div class="legend-item"><div class="legend-color" style="background:#0066ff"></div>Blau = L (links)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ffff00"></div>Gelb = U (unten)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#00cc00"></div>Gruen = V (vorne)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#0066ff"></div>Blau = H (hinten)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#cc0000"></div>Rot = R (rechts)</div>
+    <div class="legend-item"><div class="legend-color" style="background:#ff9100"></div>Orange = L (links)</div>
   </div>
   <p class="subtitle" style="margin-top:2px">Die Buchstaben sind die Zug-Namen der Flaechen – auch als Marker am Cube sichtbar.</p>
 
@@ -59,7 +61,8 @@
       • <strong>Falsche Position:</strong> Ecken sitzen auf falschen Plaetzen (Seitenfarben passen nicht)<br>
       &nbsp;&nbsp;– 3 Ecken falsch: 8-Zug-3er-Zyklus &nbsp;|&nbsp; beide Paare falsch: 11-Zug-Doppel-Tausch<br>
       • <strong>Verdreht:</strong> Ecke sitzt richtig, ist aber gedreht (Weiss zeigt seitlich)<br>
-      &nbsp;&nbsp;– 10-Zug-Algorithmus dreht 2 Ecken (einzeln geht nicht – Paritaet!)<br><br>
+      &nbsp;&nbsp;– 10-Zug-Algorithmus (2 Ecken) &nbsp;|&nbsp; Sune (3 Ecken)<br><br>
+      <strong>Erste Ebene:</strong> intuitiv loesen – Ecke mit <code>R' D' R D</code> einsetzen.<br><br>
       <strong>Notation:</strong> Ein Zug ist "im Uhrzeigersinn" aus der Sicht, wenn du die jeweilige<br>
       Flaeche <strong>von aussen direkt anschaust</strong>. Achtung: <code>U</code> (unten) und <code>H</code> (hinten)<br>
       wirken von vorne betrachtet gegenlaeufig! <code>X'</code> = gegen Uhrzeigersinn, <code>X2</code> = 180°.<br>

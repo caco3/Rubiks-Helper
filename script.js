@@ -10,19 +10,25 @@ function dispMove(m) { return DISPLAY[m[0]] + m.slice(1); }
 function dispAlgo(seq) { return seq.split(' ').map(dispMove).join(' '); }
 
 const MODES = {
-  adjacent: { name: 'Oben: Nebeneinander', algo: "R2 D L2 D2 B2 D R2",
+  adjacent: { name: 'Nebeneinander tauschen', algo: "R2 D L2 D2 B2 D R2",
               A: [1, 1, 1], B: [0, 1, 1] },   // UFR, UFL
-  diagonal: { name: 'Oben: Diagonal', algo: "R2 F2 R2",
+  diagonal: { name: 'Diagonal tauschen', algo: "R2 F2 R2",
               A: [0, 1, 1], B: [1, 1, 0] },   // UFL, UBR
-  adjacent_bottom_cycle: { name: 'Unten: 3 Ecken falsch (8 Zuege)',
+  top_cycle: { name: '3 Ecken falsch positioniert (8 Zuege)',
+              algo: "R U' L' U R' U' L U",
+              A: [1, 1, 1], B: [1, 1, 0] },   // URF, UBR
+  twist: { name: '2 Ecken verdreht (10 Zuege)',
+              algo: "B U B2 L2 U' B' U L' U L'",
+              A: [1, 1, 1], B: [0, 1, 1] },   // URF, UFL - twisted in place
+  twist3: { name: '3 Ecken verdreht – Sune (7 Zuege)',
+              algo: "R U R' U R U2 R'",
+              A: [1, 1, 1], B: [0, 1, 1] },   // URF, UFL (+ ULB unmarked)
+  adjacent_bottom_cycle: { name: 'Unten: 3 Ecken falsch positioniert (8 Zuege)',
               algo: "R D' L' D R' D' L D",
               A: [1, 0, 1], B: [0, 0, 1] },   // DFR, DLF
   adjacent_bottom: { name: 'Unten: 4 Ecken falsch – nebeneinander (11 Zuege)',
               algo: "B2 D' R D' R' D2 B D' R' B2 R",
               A: [1, 0, 1], B: [0, 0, 1] },   // DFR, DLF
-  twist: { name: 'Oben: 2 Ecken verdreht (10 Zuege)',
-              algo: "B U B2 L2 U' B' U L' U L'",
-              A: [1, 1, 1], B: [0, 1, 1] },   // URF, UFL - twisted in place
 };
 let mode = 'adjacent';
 let MOVES = MODES[mode].algo.split(' ');
@@ -53,11 +59,11 @@ let rotX = -25, rotY = 35; // initial view angles
 // Face colors
 const COLORS = {
   U: 0xffffff, // white
-  D: 0xffd500, // yellow
-  F: 0xff0000, // red
-  B: 0xff8800, // orange
-  R: 0x00cc00, // green
-  L: 0x0066ff, // blue
+  D: 0xffff00, // yellow
+  F: 0x00cc00, // green
+  B: 0x0066ff, // blue
+  R: 0xcc0000, // red
+  L: 0xff9100, // orange
   inner: 0x111111
 };
 
@@ -231,7 +237,7 @@ function makeStickerMaterial(color, letter) {
     ctx.fillText(letter, 64, 70);
   }
   const texture = new THREE.CanvasTexture(canvas);
-  return new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
+  return new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
 }
 
 function createCubie(gx, gy, gz, size, label) {
@@ -250,7 +256,7 @@ function createCubie(gx, gy, gz, size, label) {
 
   const faceMat = (color) => label
     ? makeStickerMaterial(color, label)
-    : new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide });
+    : new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
 
   // Right face (x=1)
   if (gx === 1) {

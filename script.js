@@ -555,8 +555,7 @@ function resetCube() {
     `${MODES[mode].name} (${MOVES.length} Züge)`;
   buildCube();
   updateAlgoDisplay();
-  document.getElementById('statusText').textContent =
-    'Verdreht! A und B sind auf falschen Positionen – löse den Cube.';
+  document.getElementById('statusText').textContent = '';
   document.getElementById('btnPlay').disabled = false;
   document.getElementById('btnStep').disabled = false;
 }

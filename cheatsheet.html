@@ -35,6 +35,7 @@
     .imgs figcaption { font-size: 0.8rem; color: #555; margin-top: 2px; }
     .arrow { font-size: 2rem; color: #ff9800; }
     ol { margin: 10px 0 0; padding-left: 22px; font-size: 0.9rem; line-height: 1.5; }
+    .net { display: flex; justify-content: center; margin: 10px 0 20px; }
     button.print {
       padding: 10px 20px; border: none; border-radius: 8px;
       background: #ff9800; color: #fff; font-weight: 600; cursor: pointer;
@@ -57,9 +58,11 @@
     Notation: <strong>O</strong>ben, <strong>U</strong>nten, <strong>V</strong>orne, <strong>H</strong>inten,
     <strong>R</strong>echts, <strong>L</strong>inks. Ein Zug dreht die Fläche im Uhrzeigersinn,
     von dieser Fläche aus gesehen. <code>'</code> = gegen den Uhrzeigersinn, <code>2</code> = 180°.<br>
-    In den Bildern: großes Quadrat = Sticker der betrachteten Seite, kleine Quadrate = Seiten-Sticker,
-    <strong>A</strong>/<strong>B</strong> = die markierten Ecken.
+    In den Bildern ist die Ebene <strong>aufgeklappt</strong> dargestellt: die 2×2-Fläche in der Mitte,
+    drumherum die Seiten-Sticker derselben Ecken. <strong>A</strong>/<strong>B</strong> = markierte Ecken.
   </p>
+
+  <div class="net"><canvas id="netCanvas"></canvas></div>
 
   <div id="cards"></div>
 

@@ -53,14 +53,18 @@ function applySeq(cubies, seq) {
 }
 
 // ---- Drawing ----
-// Draw one layer as 2x2 cells; each cell: big square = face sticker,
-// two small squares = the two side stickers, plus A/B letter.
+// Unfolded layer view: 2x2 face in the middle, the side stickers of each
+// corner unfolded around it – like looking at the layer flattened out:
+//              [B][B]      <- stickers facing back
+//        [L] [ c  c ] [R]  <- row of corners (back row)
+//        [L] [ c  c ] [R]  <- front row
+//              [F][F]      <- stickers facing front
 function drawLayer(canvas, cubies, layer, cfg) {
   const isU = layer === 'U';
   const fy = isU ? 1 : -1;
-  const size = 90, pad = 10, gap = 8;
-  canvas.width = 2 * size + gap + 2 * pad;
-  canvas.height = 2 * size + gap + 2 * pad + 18;
+  const s = 56, gap = 4, pad = 10, top = 22;
+  canvas.width = 4 * s + 3 * gap + 2 * pad;
+  canvas.height = 4 * s + 3 * gap + 2 * pad + top;
   const ctx = canvas.getContext('2d');
   const gridA = cfg.A.map(v => v * 2 - 1).join(',');
   const gridB = cfg.B.map(v => v * 2 - 1).join(',');
@@ -68,47 +72,122 @@ function drawLayer(canvas, cubies, layer, cfg) {
   ctx.fillStyle = '#222';
   ctx.font = 'bold 12px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(isU ? 'Obere Ebene (Draufsicht)' : 'Untere Ebene (von unten)',
+  ctx.fillText(isU ? 'Obere Ebene' : 'Untere Ebene',
                canvas.width / 2, 14);
+
+  const sq = (col, row, color) => {
+    const px = pad + col * (s + gap), py = pad + top + row * (s + gap);
+    ctx.fillStyle = HEX[color] || '#555';
+    ctx.fillRect(px, py, s, s);
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(px, py, s, s);
+    return [px + s / 2, py + s / 2];
+  };
+
+  // trapezoid side sticker: right angles on the inner edge (touching the
+  // 2x2 face), outer edge slanted – like a flap folded away from the cube
+  const t = 0.35;                      // taper fraction
+  const trap = (col, row, dir, slant, color) => {
+    const x0 = pad + col * (s + gap), y0 = pad + top + row * (s + gap);
+    const d = s * t;                   // taper offset
+    ctx.beginPath();
+    let cx, cy;
+    if (dir === 'R') {                 // inner edge = left side (x0)
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x0 + s, y0 + (slant < 0 ? d : 0));
+      ctx.lineTo(x0 + s, y0 + s - (slant > 0 ? d : 0));
+      ctx.lineTo(x0, y0 + s);
+      cx = x0 + s * 0.55; cy = y0 + s / 2;
+    } else if (dir === 'L') {          // inner edge = right side (x0+s)
+      ctx.moveTo(x0 + s, y0);
+      ctx.lineTo(x0, y0 + (slant < 0 ? d : 0));
+      ctx.lineTo(x0, y0 + s - (slant > 0 ? d : 0));
+      ctx.lineTo(x0 + s, y0 + s);
+      cx = x0 + s * 0.45; cy = y0 + s / 2;
+    } else if (dir === 'D') {          // inner edge = top side (y0)
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x0 + s, y0);
+      ctx.lineTo(x0 + s - (slant > 0 ? d : 0), y0 + s);
+      ctx.lineTo(x0 + (slant < 0 ? d : 0), y0 + s);
+      cx = x0 + s / 2; cy = y0 + s * 0.55;
+    } else {                           // 'U': inner edge = bottom side (y0+s)
+      ctx.moveTo(x0, y0 + s);
+      ctx.lineTo(x0 + s, y0 + s);
+      ctx.lineTo(x0 + s - (slant > 0 ? d : 0), y0);
+      ctx.lineTo(x0 + (slant < 0 ? d : 0), y0);
+      cx = x0 + s / 2; cy = y0 + s * 0.45;
+    }
+    ctx.closePath();
+    ctx.fillStyle = HEX[color] || '#555';
+    ctx.fill();
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    return [cx, cy];
+  };
+
+  const label = (cx, cy, letter, size = 26) => {
+    ctx.fillStyle = '#000';
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 4;
+    ctx.font = `bold ${size}px sans-serif`;
+    ctx.strokeText(letter, cx, cy + size * 0.3);
+    ctx.fillText(letter, cx, cy + size * 0.3);
+  };
 
   for (const c of cubies) {
     if (c.pos[1] !== fy) continue;
     const x = c.pos[0], z = c.pos[2];
-    // U: front (z=+1) at bottom; D: viewed from below -> mirror x
-    const col = isU ? (x + 1) / 2 : (1 - x) / 2;
-    const row = isU ? (1 - z) / 2 : (1 - z) / 2;
-    const px = pad + col * (size + gap);
-    const py = pad + 18 + row * (size + gap);
+    const col = (x + 1) / 2;         // 0 left, 1 right
+    const row = (z + 1) / 2;         // 0 back (top), 1 front (bottom)
+    // center cell (sticker facing the layer)
+    const [ccx, ccy] = sq(1 + col, 1 + row, c.st[`0,${fy},0`]);
+    // side stickers unfolded as trapezoids
+    const [hx, hy] = trap(x > 0 ? 3 : 0, 1 + row, x > 0 ? 'R' : 'L',
+                          row === 0 ? -1 : 1,
+                          c.st[`${x > 0 ? 1 : -1},0,0`]);
+    const [vx, vy] = trap(1 + col, z > 0 ? 3 : 0, z > 0 ? 'D' : 'U',
+                          col === 0 ? -1 : 1,
+                          c.st[`0,0,${z > 0 ? 1 : -1}`]);
+    // mark A/B on all three stickers of the corner
+    if (c.id === gridA || c.id === gridB) {
+      const l = c.id === gridA ? 'A' : 'B';
+      label(ccx, ccy, l);
+      label(hx, hy, l, 16);
+      label(vx, vy, l, 16);
+    }
+  }
+}
 
-    // main face sticker
-    const faceKey = `0,${fy},0`;
-    ctx.fillStyle = HEX[c.st[faceKey]] || '#555';
-    ctx.fillRect(px, py, size, size);
+// Draw the unfolded cube net: all 6 faces with letter + clockwise arrow
+function drawNet(canvas) {
+  const s = 64, pad = 8;
+  // net layout:      [U=O]
+  //            [L][F=V][R][B=H]
+  //                  [D=U]
+  const cells = {
+    U: [1, 0], L: [0, 1], F: [1, 1], R: [2, 1], B: [3, 1], D: [1, 2]
+  };
+  canvas.width = 4 * s + 2 * pad;
+  canvas.height = 3 * s + 2 * pad;
+  const ctx = canvas.getContext('2d');
+  for (const [face, [cx, cy]] of Object.entries(cells)) {
+    const px = pad + cx * s, py = pad + cy * s;
+    ctx.fillStyle = HEX[face];
+    ctx.fillRect(px, py, s - 2, s - 2);
     ctx.strokeStyle = '#111';
     ctx.lineWidth = 2;
-    ctx.strokeRect(px, py, size, size);
-
-    // side stickers: x-dir and z-dir facing colors
-    const sx = c.st[`${x > 0 ? 1 : -1},0,0`];
-    const sz = c.st[`0,0,${z > 0 ? 1 : -1}`];
-    ctx.fillStyle = HEX[sx] || '#555';
-    ctx.fillRect(px + 4, py + size - 24, 20, 20);
-    ctx.strokeRect(px + 4, py + size - 24, 20, 20);
-    ctx.fillStyle = HEX[sz] || '#555';
-    ctx.fillRect(px + size - 24, py + size - 24, 20, 20);
-    ctx.strokeRect(px + size - 24, py + size - 24, 20, 20);
-
-    // A/B label if this cubie is a marked one
-    const id = c.id;
-    if (id === gridA || id === gridB) {
-      ctx.fillStyle = '#000';
-      ctx.font = 'bold 34px sans-serif';
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 5;
-      const letter = id === gridA ? 'A' : 'B';
-      ctx.strokeText(letter, px + size / 2, py + size / 2 + 6);
-      ctx.fillText(letter, px + size / 2, py + size / 2 + 6);
-    }
+    ctx.strokeRect(px, py, s - 2, s - 2);
+    // letter
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 4;
+    ctx.font = 'bold 30px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.strokeText(DISPLAY[face], px + s / 2 - 1, py + s / 2 - 1);
+    ctx.fillText(DISPLAY[face], px + s / 2 - 1, py + s / 2 - 1);
   }
 }
 
@@ -166,4 +245,5 @@ function build() {
   }
 }
 
+drawNet(document.getElementById('netCanvas'));
 build();
